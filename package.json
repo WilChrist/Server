@@ -1,0 +1,23 @@
+{
+  "name": "serveurpacit",
+  "version": "1.0.0",
+  "description": "API pour l'application Pacit",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "ink-docstrap": "^1.3.2",
+    "mongoose": "*"
+  },
+  "keywords": [
+    "PACIT"
+  ],
+  "author": "Willy Nzesseu",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
+  }
+}
