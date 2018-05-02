@@ -9,6 +9,8 @@ const config = require('./config/database');
 Project =require('./models/project');
 Diagram =require('./models/diagram');
 
+ServiceProviders =require('./models/serviceProvider');
+
 mongoose.connect(config.database);
 let db = mongoose.connection;
 
@@ -149,6 +151,68 @@ app.delete('/api/diagrams/:_id', (req, res) => {
         });
 	});
 });
+//**************************************************************************************************************************************** */
 
+// Get ServiceProviders
+app.get('/api/serviceproviders', (req, res) => {
+	ServiceProviders.getServiceProviders((err, serviceProviders) => {
+		if(err){
+			throw err;
+		}
+		res.json(serviceProviders);
+	});
+});
+
+//Get ServiceProviders by id
+app.get('/api/serviceProviders/:_id', (req, res) => {
+	ServiceProviders.getServiceProviderById(req.params._id, function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		res.json(serviceProvider);
+	});
+});
+
+//Post ServiceProviders
+app.post('/api/serviceProviders', (req, res) => {
+	var serviceProvider =req.body;
+	console.log(Date.now());
+    ServiceProviders.addServiceProvider(serviceProvider,function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		res.json(serviceProvider);
+	});
+});
+
+//Put ServiceProviders
+app.put('/api/serviceProviders/:_id', (req, res) => {
+    var id=req.params._id;
+	var serviceProvider =req.body;
+    ServiceProviders.updateServiceProvider(id,serviceProvider,{},function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		ServiceProviders.getServiceProviderById(req.params._id, function(err, serviceProvider) {
+            if(err){
+                throw err;
+            }
+            res.json(serviceProvider);
+        });
+	});
+});
+
+//Delete ServiceProviders
+app.delete('/api/serviceProviders/:_id', (req, res) => {
+    var id=req.params._id;
+    ServiceProviders.removeServiceProvider(id,function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		res.json(serviceProvider);
+	});
+});
+
+/***************************************************************************************************************************************** */
 app.listen(3000);
 console.log('Running on port 3000...');
