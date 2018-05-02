@@ -25,7 +25,8 @@ var util = require('util');
           },
           birth_date:{
             type: Date,
-            required: true
+            required: false,
+            Default:Date.now()
           },
           gender:{
             type: String,
@@ -37,7 +38,7 @@ var util = require('util');
           },
           registering_date:{
             type: Date,
-            Default: Date.now
+            Default: Date.now()
           }
     });
 };
@@ -48,23 +49,5 @@ const CitizenSchema = new defaultElement();
 
  });
 
-/*const ServiceProviderSchema=new defaultElement();
-ServiceProviderSchema.add({
-    company:{
-        type: String,
-        required: true
-      }
-});/*
-const AdministratorSchema=new defaultElement();
-AdministratorSchema.add({
-    id:{
-        type: Number,
-        required: true
-      }
-});*/
 
 const Citizen = module.exports = mongoose.model('Citizen', CitizenSchema);
-//const ServiceProvider = module.exports = Citizen.discriminator('ServiceProvider',ServiceProviderSchema);
-//const Administrator = module.exports = Citizen.discriminator('Administrator',AdministratorSchema);
-//const ServiceProvider = module.exports = mongoose.model('ServiceProvider', ServiceProviderSchema);
-//const Administrator = module.exports = mongoose.model('Administrator', AdministratorSchema);
