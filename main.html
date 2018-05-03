@@ -1,0 +1,235 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">PARCIT </a>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            </div>
+            <div class="collapse navbar-collapse" id="navcol">
+                <ul class="nav navbar-nav navbar-right">
+                    <li role="presentation"><a href="#">A propos</a></li>
+                    <li role="presentation"><a href="#Projets">Projets </a></li>
+                    <li role="presentation"><a href="#Contact">Contact </a></li>
+                    <li role="presentation" onclick="document.getElementById('id02').style.display='block'"><a href="" id="sign-up-button">Inscription </a></li>
+                    <li role="presentation" onclick="document.getElementById('id01').style.display='block'"><a href="" id="sign-in-button">Connexion </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="myCarousel" class="carousel slide welcomCarousel" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#myCarousel" data-slide-to="1"></li>
+              <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+          
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+              <div class="item active">
+                <img src="images/img1.jpeg" alt="cr1">
+              </div>
+          
+              <div class="item">
+                <img src="images/img2.jpeg" alt="cr2">
+              </div>
+          
+              <div class="item">
+                <img src="images/img6.jpeg" alt="cr3">
+              </div>
+            </div>
+          
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+                   
+          <!--List of projets-->
+          <div class="container" ng-controller="MyCtrl" id="Projets">
+                <section  class="resume-section p-3 p-lg-5 d-flex flex-column">
+                    <div class="ProjetsHeader">
+                        <h1 class="mb-5">Projets</h1>
+                        <div class="container-fluid ">
+                            <div class="col-md-6">
+                            <label for="Show">Nombre des projets</label>
+                            <select ng-model="pageSize" id="pageSize" class="form-control" placeholder="Nbr de page" ng-init="pageSize='10'">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                             </select>
+                           </div>
+
+                           <div class="col-md-6">
+                                <label for="Order">Organiser par</label>
+                                <select class="form-control" ng-model="order2" ng-init="order2='name'">
+                                         <option value="id">ID</option>
+                                         <option value="name">Name</option>
+                                 </select>
+                            </div>
+                            
+                                <div class="col-md-6">
+                                    <input type="text" placeholder="Filtre by name" class="form-control" ng-model="_query1">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" placeholder="Filtre by description" class="form-control" ng-model="_query2">
+                                </div>
+                            
+                      </div>       
+                    </div>
+                        <div class="resume-item d-flex flex-column flex-md-row mb-5 divProjet" ng-repeat="item in data | filter:{nom:_query1,description:_query2} | orderBy: order2 | startFrom:currentPage*pageSize | limitTo:pageSize">
+                            <div ng-click="myFunc($event,item)" class="resume-content mr-auto">
+                                <h2 class="mb-0">{{item.nom}}</h2>
+                                <div class="subheading mb-3">{{item.responsable}}</div>
+                                <p>{{item.description}}</p>
+                            </div>
+                            <div class="resume-date text-md-right">
+                                <span class="text-primary">{{item.date_debut}} - {{item.date_fin}}</span>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="btn btn-primary" style="margin-left: 30px;">
+                                Previous
+                            </button>
+                            {{currentPage+1}}/{{numberOfPages()}}
+                            <button ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1" class="btn btn-primary">
+                                Next
+                            </button>
+                          </div>
+                            <script type="text/ng-template" id="dialog1.tmpl.html">
+                                <md-dialog aria-label="Mango (Fruit)">
+                                <form ng-cloak>
+                                  <md-toolbar>
+                                    <div class="md-toolbar-tools">
+                                      <h2>{{currentprojet.nom}}</h2>
+                                      <span flex></span>
+                                      <md-button class="md-icon-button" ng-click="cancel()">
+                                        X
+                                      </md-button>
+                                    </div>
+                                  </md-toolbar>
+                              
+                                  <md-dialog-content>
+                                    <div class="md-dialog-content">
+                                      <h2>Projet :{{currentprojet.nom}}</h2>
+                                      <h3>Responsable {{currentprojet.responsable}}</h3>
+                                    <p>
+                                        {{currentprojet.description}}
+                                    </p>
+        
+                                    </div>
+                                  </md-dialog-content>
+                                  <md-dialog-actions layout="row">
+                                    <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+                                      More on Wikipedia
+                                    </md-button>
+                                    <span flex></span>
+                                    <md-button ng-click="answer('not useful')">
+                                     Not Useful
+                                    </md-button>
+                                    <md-button ng-click="answer('useful')" class="md-primary">
+                                      Useful
+                                    </md-button>
+                                  </md-dialog-actions>
+                                </form>
+                              </md-dialog>
+                              </script>
+                </section>                
+         </div>
+        <!-- formulaire de connexion -->
+          <div id="id01" class="modal my-form">
+                <form class="modal-content animate"  ng-controller="CtrlConnection" name="myForm">
+                    <div class="imgcontainer">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                    </div>
+                    <div class="container" >
+                        <label for="role"><b>Comme</b></label>
+                            <div class="container-fluid">
+                                <div class="col-sm-12 col-xs-12 col-md-3"><input type="radio"  ng-model="typelogin" value="USER" > User</div>
+                                <div class="col-sm-12 col-xs-12 col-md-3"><input type="radio"  ng-model="typelogin" value="SERVICEPROVIDER" > Prestataire</div>
+                            </div> 
+                        <label for="emaillogin"><b>Email</b></label>
+                        <input type="email" placeholder="Enter Email" ng-model="emaillogin" class="form-control" required>
+                        <div role="alert">
+                                <span class="error" ng-show="myForm.email.$error.email">
+                                  Not valid email!</span>
+                              </div>
+                        <label for="pswlogin"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" ng-model="pswlogin" class="form-control" required>
+                        <button type="submit" ng-click="login()" >Login</button>
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember" > Remember me
+                        </label>
+                    </div>
+                    <div class="container" style="background-color:#f1f1f1">
+                        <span class="psw">Forgot <a href="#">password?</a></span>
+                    </div>
+                </form>
+        </div>
+
+<!-- formulaire d'inscripption -->
+<div id="id02" class="modal">
+<form class="modal-content animate" ng-controller="Ctrlinscription">
+    <div class="imgcontainer">
+    <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+   
+    </div>
+
+    <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" ng-model="uname" class="form-control" required>
+        
+        <label for="emailsignup"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" ng-model="emailsignup" class="form-control" required>
+
+        <label for="pswsignup"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" ng-model="pswsignup" class="form-control" required>
+        
+        <label for="pswsignup"><b>Confirm Password</b></label>
+        <input type="password" placeholder="Enter Password" ng-model="pswsignup2" ng-blur="checkpassword()" ng-focus="clearerror()" class="form-control" required>
+        <span class="error" >{{error}}</span><br/>
+
+        <label for="sexe"><b>Sexe</b></label>
+        <div class="container-fluid">
+                <div class="col-sm-12 col-xs-12 col-md-3"><input type="radio"  ng-model="sexe" value="homme" > Homme</div>
+                <div class="col-sm-12 col-xs-12 col-md-3"><input type="radio"  ng-model="sexe" value="femme" > Femme</div>
+        </div> 
+
+        <button type="submit" ng-click="inscrire()">sign UP</button>
+    </div>
+</form>
+</div>
+
+<!--Contact-->
+<div class="container-fluid bg-grey" id="Contact">
+        <h2 class="text-center">CONTACT</h2>
+        <div class="row">
+          <div class="col-sm-5">
+            <p>Contact us and we'll get back to you within 24 hours.</p>
+            <p><span class="glyphicon glyphicon-map-marker"></span> MAROC</p>
+            <p><span class="glyphicon glyphicon-phone"></span> +00 1515151515</p>
+            <p><span class="glyphicon glyphicon-envelope"></span> pacit@pacit.com</p>
+          </div>
+          <div class="col-sm-7">
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+              </div>
+              <div class="col-sm-6 form-group">
+                <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+              </div>
+            </div>
+            <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
+            <div class="row">
+              <div class="col-sm-12 form-group">
+                <button class="btn btn-default pull-right" type="submit">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

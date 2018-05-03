@@ -1,0 +1,171 @@
+<div class="wrapper" ng-controller="MyCtrl" ng-init="check()">
+    <!-- <script src="js/layout2.js"></script> -->
+    <div ng-include="'navigation.html'"></div>
+       <!--<nav class="navbar navbar-default navbar-fixed-top">
+           <div class="container-fluid">
+               <div class="navbar-header"><a class="navbar-brand navbar-link" href="#">PARCIT </a>
+                   <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+               </div>
+               <div class="collapse navbar-collapse" id="navcol-1">
+                   <ul class="nav navbar-nav navbar-right">
+                       <li>{{user.name}}<button type="submit" ng-click="logout()">Logout</button></li>
+                   </ul>
+               </div>
+           </div>
+       </nav>-->
+   
+       
+       <div class="main-panel">
+           <nav class="navbar navbar-default navbar-fixed">
+               <div class="container-fluid">
+                   <div class="navbar-header">
+                       <button type="button" class="navbar-toggle" data-toggle="collapse">
+                           <span class="sr-only">Toggle navigation</span>
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                           <span class="icon-bar"></span>
+                       </button>
+                       <a class="navbar-brand" href="#">Profil</a>
+                   </div>
+                   <div class="collapse navbar-collapse">
+                       <ul class="nav navbar-nav navbar-left">
+                           <li>
+                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                   <i class="fa fa-dashboard"></i>
+                               </a>
+                           </li>
+                       </ul>
+   
+                       <ul class="nav navbar-nav navbar-right">
+                           <li>
+                              <a href="">
+                                  {{user.username}}
+                               </a>
+                           </li>
+                       </ul>
+                   </div>
+               </div>
+           </nav>
+           <div class="content" id="mainContent">
+               <div class="container-fluid">
+                 <div class="row">
+                     <div class="col-md-12">
+                            <h1 class="mb-5">Trier Les Projets</h1>
+                            <div class="container-fluid ">
+                                    <div class="col-md-6">
+                                    <label for="Show">Nombre des projets</label>
+                                    <select ng-model="pageSize" id="pageSize" class="form-control" placeholder="Nbr de page" ng-init="pageSize='10'">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                     </select>
+                                   </div>
+
+                                   <div class="col-md-6">
+                                        <label for="Order">Organiser par</label>
+                                        <select class="form-control" ng-model="order2" ng-init="order2='name'">
+                                                 <option value="id">ID</option>
+                                                 <option value="name">Name</option>
+                                         </select>
+                                    </div>
+                                    
+                                        <div class="col-md-6">
+                                            <input type="text" placeholder="Filtre by name" class="form-control" ng-model="_query1">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" placeholder="Filtre by description" class="form-control" ng-model="_query2">
+                                        </div>
+                                    
+                        </div>       
+
+                                    <div class="resume-item divProjet" ng-repeat="item in data | filter:{nom:_query1,description:_query2} | orderBy: order2 | startFrom:currentPage*pageSize | limitTo:pageSize">
+                                            <div ng-click="myFunc($event,item)" class="resume-content mr-auto">
+                                                <h2 class="mb-0">{{item.nom}}</h2>
+                                                <div class="subheading mb-3">{{item.responsable}}</div>
+                                                <p>{{item.description}}</p>
+                                            </div>
+                                            <div class="resume-date text-md-right">
+                                                <span class="text-primary">{{item.date_debut}} - {{item.date_fin}}</span>
+                                            </div>
+                                    </div>
+                                    
+                                    <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1" class="btn btn-primary" style="margin-left: 35px;">
+                                            Previous
+                                        </button>
+                                        {{currentPage+1}}/{{numberOfPages()}}
+                                        <button ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1" class="btn btn-primary">
+                                            Next
+                                    </button>
+                                    <script type="text/ng-template" id="dialog1.tmpl.html">
+                                        <md-dialog aria-label="Mango (Fruit)">
+                                        <form ng-cloak>
+                                          <md-toolbar>
+                                            <div class="md-toolbar-tools">
+                                              <h2>Mango (Fruit)</h2>
+                                              <span flex></span>
+                                              <md-button class="md-icon-button" ng-click="cancel()">
+                                               Cancel
+                                              </md-button>
+                                            </div>
+                                          </md-toolbar>
+                                      
+                                          <md-dialog-content>
+                                            <div class="md-dialog-content">
+                                              <h2>ID Projet est {{currentprojet.id}}</h2>
+                                              
+                                            <p>
+                                                {{currentprojet.description}}
+                                            </p>
+                
+                                            </div>
+                                          </md-dialog-content>
+                                      
+                                          <md-dialog-actions layout="row">
+                                            <md-button href="#!/evaluation/{{currentprojet.id}}" target="_blank" md-autofocus>
+                                              evaluer le projet
+                                            </md-button>
+                                            <span flex></span>
+                                            <md-button ng-click="answer('not useful')">
+                                             Not Useful
+                                            </md-button>
+                                            <md-button ng-click="answer('useful')" class="md-primary">
+                                              Useful
+                                            </md-button>
+                                          </md-dialog-actions>
+                                        </form>
+                                      </md-dialog>
+                                      </script>           
+                            
+                            
+                            
+                        </div>      
+                    </div>
+                 </div>
+                </div>
+         
+           <footer class="footer">
+               <div class="container-fluid">
+                   <nav class="pull-left">
+                       <ul>
+                           <li>
+                               <a href="#">
+                                   Home
+                               </a>
+                           </li>
+   
+                       </ul>
+                   </nav>
+               </div>
+           </footer>
+        </div>
+   </div>
+   
+   <script>
+        $(document).ready(function(){
+          $('ul.nav li.active').removeClass("active");
+          $('ul.nav li#listeprojets').addClass("active");
+        });
+      </script>
+
+  

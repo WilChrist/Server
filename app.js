@@ -3,8 +3,8 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/database');
-
-
+var fs = require('fs');
+var session = require('express-session');
 
 Project =require('./models/project');
 Diagram =require('./models/diagram');
@@ -29,10 +29,44 @@ db.on('error', function(err){
 const app = express();
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-	res.send('Please use /api/books or /api/genres');
-});
+var cors=require('cors');
+app.use(cors());
 
+app.use( session({secret : 's3Cur3',resave: false,saveUninitialized: true, cookie: {
+	path: "/",
+	httpOnly: true,
+	cookieName: 'session'
+}}));
+
+/*app.get('/', (req, res) => {
+	res.send('Please use /api/books or /api/genres');
+});*/
+app.use(express.static(path.join(__dirname, 'static')));
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/index.html'));
+});
+app.get('/main.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/main.html'));
+});
+app.get('/dashboard.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/dashboard.html'));
+});
+app.get('/evaluation.html', function(req,res){
+    res.sendFile(path.join(__dirname+ '/evaluation.html'));
+});
+app.get('/navigation.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/navigation.html'));
+});
+app.get('/profil.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/profil.html'));
+});
+app.get('/liste_projets.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/liste_projets.html'));
+});
+app.get('/erreur.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/erreur.html'));
+});
 // Get Projects
 app.get('/api/projects', (req, res) => {
 	Project.getProjects((err, projects) => {
@@ -123,6 +157,10 @@ app.post('/api/diagrams', (req, res) => {
 	});
 });
 
+app.post('/api/getprojet',function(req,res){
+    var p = fs.readFileSync('liste_serveurs.json','UTF-8');
+    res.send({projet:p});
+});
 //Put Diagram
 app.put('/api/diagrams/:_id', (req, res) => {
     var id=req.params._id;
@@ -173,10 +211,51 @@ app.get('/api/serviceProviders/:_id', (req, res) => {
 	});
 });
 
+//Post login
+app.post('/api/login', (req, res) => {
+	var mail=req.body.email;
+	var pass=req.body.password;
+	ServiceProviders.getServiceProviderByEmail(mail, function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		//console.log(serviceProvider);
+		if(serviceProvider.password==pass){
+			req.session.user=serviceProvider;
+			req.session.save(function(err){});
+			console.log(req);
+			res.json({user:serviceProvider});
+			
+		}else{
+			res.json({error:"bad password"});
+		}
+		
+	});
+});
+
+app.post('/deconnect',function(req,res){
+    req.session.destroy();
+	req.session=null;
+	res.clearCookie();
+	res.redirect('/');
+});
+
+app.post('/api/issession',function(req,res){
+	req.session.reload(function(err){});
+	console.log("here");
+	console.log(req.session.user);
+if(req.session.user){
+res.send({session:true,user:req.session.user});
+}
+else{
+res.send({session:false});
+}
+});
+
+
 //Post ServiceProviders
 app.post('/api/serviceProviders', (req, res) => {
 	var serviceProvider =req.body;
-	console.log(Date.now());
     ServiceProviders.addServiceProvider(serviceProvider,function(err, serviceProvider) {
 		if(err){
 			throw err;
