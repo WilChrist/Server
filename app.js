@@ -68,12 +68,12 @@ app.get('/erreur.html', function (req, res) {
     res.sendFile(path.join(__dirname+ '/erreur.html'));
 });
 // Get Projects
-app.get('/api/projects', (req, res) => {
+app.post('/api/projectslist', (req, res) => {
 	Project.getProjects((err, projects) => {
 		if(err){
 			throw err;
 		}
-		res.json(projects);
+		res.json({list:projects});
 	});
 });
 
@@ -89,12 +89,12 @@ app.get('/api/projects/:_id', (req, res) => {
 
 //Post Project
 app.post('/api/projects', (req, res) => {
-    var project =req.body;
+    var project =req.body.projet;
     Project.addProject(project,function(err, project) {
 		if(err){
 			throw err;
 		}
-		res.json(project);
+		res.json({success:true});
 	});
 });
 
@@ -138,22 +138,31 @@ app.get('/api/diagrams', (req, res) => {
 
 //Get Diagram by id
 app.get('/api/diagrams/:_id', (req, res) => {
-	Diagram.getDiagramById(req.params._id, function(err, diagram) {
+	console.log(req.params._id);
+	Project.getProjectById(req.params._id,function(err, project) {
 		if(err){
 			throw err;
 		}
-		res.json(diagram);
+		Diagram.getDiagramById(project.id_diagram, function(err, diagram) {
+			console.log(diagram);
+			if(err){
+				throw err;
+			}
+			res.json({gantt:diagram});
+		});
 	});
+	
 });
 
 //Post Diagram
 app.post('/api/diagrams', (req, res) => {
-    var diagram =req.body;
+	var diagram =req.body.gantt;
+	console.log(req.body.gantt);
     Diagram.addDiagram(diagram,function(err, diagram) {
 		if(err){
 			throw err;
 		}
-		res.json(diagram);
+		res.json({ganttsaved:diagram});
 	});
 });
 
@@ -223,7 +232,7 @@ app.post('/api/login', (req, res) => {
 		if(serviceProvider.password==pass){
 			req.session.user=serviceProvider;
 			req.session.save(function(err){});
-			console.log(req);
+			//console.log(req);
 			res.json({user:serviceProvider});
 			
 		}else{
@@ -233,7 +242,7 @@ app.post('/api/login', (req, res) => {
 	});
 });
 
-app.post('/deconnect',function(req,res){
+app.post('/api/deconnect',function(req,res){
     req.session.destroy();
 	req.session=null;
 	res.clearCookie();

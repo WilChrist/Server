@@ -239,6 +239,7 @@ section.resume-section .resume-item .resume-date {
     color: #eefdfd; /* Grey text */
     width: 80%; /* Full width */
     padding: 20px; /* Some padding */
+    overflow: hidden;
 }
 .ProjetsHeader {
     

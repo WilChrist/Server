@@ -144,28 +144,15 @@
                 }
             });
 
-                app.controller('MyCtrl', ['$scope', '$filter','$mdDialog','shared','session', function ($scope, $filter,$mdDialog,shared,session) {
+                app.controller('MyCtrl', ['$scope', '$filter','$mdDialog','shared','session','$http', function ($scope, $filter,$mdDialog,shared,session,$http) {
                     $scope.currentPage = 0;
                     $scope.pageSize = 10;
-                    $scope.data = [
-                        {id:"1",nom:"PARCIT",description:"Projet informatique de gestion des projets.",date_debut:"15/01/2017",date_fin:"16/02/2020",responsable:"Group-WFED"},
-                        {"id":"2","nom":"G-STAGE","description":"Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDP-KQDL"},
-                        {"id":"3","nom":"STACK","description":"Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"Group-GIT"},
-                        {"id":"4","nom":"Roi","description":"Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"1","nom":"PARCIT","description":"Projet informatique de gestion des projets.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"Group-WFED"},
-                        {"id":"5","nom":"Douiab","description":"Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"6","nom":"Douiab","description":"Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"7","nom":"Akif","description":"Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"8","nom":"Abidi","description":"Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"9","nom":"","description":"Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"10","nom":"Douiab","description":"Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"11","nom":"Douiab","description":"Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                        {"id":"12","nom":"Douiab","description":"Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.","date_debut":"15/01/2017","date_fin":"16/02/2020","responsable":"HDPSKOOL"},
-                    ];
+                    $scope.data = [];
                     $scope.q = '';
                     
                     $scope.check = function(){
                         session.islogged();
+                        this.getprojectlist();
                     }
                     
                     $scope.getData = function () {
@@ -183,6 +170,21 @@
                    
                     }
                     
+                    $scope.getprojectlist = function(){
+                        $http.post("/api/projectslist") /*j'ai retirer le type*/
+                            .then (function success(data, status, headers, config) {
+                                if(data.data.list != null){
+                                    alert("données recu");
+                                    $scope.data = data.data.list;
+                                }
+                                else{
+                                    alert("Euh il n'y a pas de données");
+                                }
+                            },function eroor(data, status, headers, config) {
+                            alert( "failure message: " + JSON.stringify({data: data}));
+                        });
+                    }
+
                     $scope.myFunc = function(ev,item) {
                         shared.setitem(item);
                         $scope.status = '  ';
@@ -329,15 +331,16 @@
                 }
             });
             app.controller("Ctrlevaluation",function($scope,session,$http,$routeParams){
-                $scope.projet={};
+                $scope.gantttoevaluate={};
                 $scope.tasks=[];
                // alert($routeParams.id);
-                $scope.getprojcet=function(id_projet){
+                $scope.getprojcet=function(){
                     session.islogged();
-                    $http.post("/api/getprojet")
+                    $http.get("/api/diagrams/"+$routeParams.id)
                     .then (function success(data, status, headers, config) {
-                        $scope.projet = JSON.parse(data.data.projet);
-                        $scope.tasks = $scope.projet.gantt.tasks.slice(1,$scope.projet.gantt.tasks.length); 
+                        console.log(data.data);
+                        $scope.gantttoevaluate = data.data.gantt;
+                        $scope.tasks = $scope.gantttoevaluate.objet.tasks.slice(1,$scope.gantttoevaluate.objet.tasks.length); 
                     },function eroor(data, status, headers, config) {
                     alert( "failure message: " + JSON.stringify({data: data}));
                      });
@@ -372,19 +375,36 @@
                 $scope.initialisation=function(){
                     this.showTab(currentTab);
                 }
+
                 $scope.save=function(){
-                    var projettosave={nom:$scope.nomproj,lieu:$scope.lieuproj,description:$scope.descriptionproj,user:$rootScope.user.email,};
-                    var gantttosave = ge.saveGantt();
-                    projettosave.date_debut = gantttosave.tasks[0].start;
-                    projettosave.date_fin = gantttosave.tasks[0].end;
-                    $http.post("/save",{projet:projettosave,gantt:gantttosave})
+                    var projettosave={name:$scope.nomproj,location:$scope.lieuproj,description:$scope.descriptionproj,author:$rootScope.user._id,};
+                    var gantttosave = {name:$scope.nomproj+"_Gantt",objet:ge.saveGantt()}
+                    projettosave.end_date = gantttosave.objet.tasks[0].start;
+                    projettosave.begin_date = gantttosave.objet.tasks[0].end;
+
+                    $http.post("/api/diagrams",{gantt:gantttosave})
                     .then (function success(data, status, headers, config) {
                        
-                        if(data.data.success){
-                            alert("project sauvegarder"); 
+                        if(data.data.ganttsaved){
+                            alert("gatt sauvegarder"); 
+                            projettosave.id_diagram = data.data.ganttsaved._id;
+                            ////////////////////////////////////////////////////////////////////////////////////////
+                                    $http.post("/api/projects",{projet:projettosave})
+                                        .then (function success(data, status, headers, config) {
+                                        
+                                            if(data.data.success){
+                                                alert("project sauvegarder");     
+                                            }
+                                            else{
+                                                alert("une erreur est survenue lors de la sauvegarde du projet");
+                                            }
+                                        },function eroor(data, status, headers, config) {
+                                        alert( "failure message: " + JSON.stringify({data: data}));
+                                     });
+                            ///////////////////////////////////////////////////////////////////////////////////////
                         }
                         else{
-                            alert("une erreur est survenue");
+                            alert("une erreur est lors de la sauvegarde du diagramme");
                         }
                     },function eroor(data, status, headers, config) {
                     alert( "failure message: " + JSON.stringify({data: data}));

@@ -81,12 +81,11 @@
 
                                     <div class="resume-item divProjet" ng-repeat="item in data | filter:{nom:_query1,description:_query2} | orderBy: order2 | startFrom:currentPage*pageSize | limitTo:pageSize">
                                             <div ng-click="myFunc($event,item)" class="resume-content mr-auto">
-                                                <h2 class="mb-0">{{item.nom}}</h2>
-                                                <div class="subheading mb-3">{{item.responsable}}</div>
+                                                <h2 class="mb-0">{{item.name}}</h2>
                                                 <p>{{item.description}}</p>
                                             </div>
                                             <div class="resume-date text-md-right">
-                                                <span class="text-primary">{{item.date_debut}} - {{item.date_fin}}</span>
+                                                <span class="text-primary">{{item.begin_date | date:'dd/MM/yyyy'}} - {{item.end_date | date:'dd/MM/yyyy'}}</span>
                                             </div>
                                     </div>
                                     
@@ -102,17 +101,17 @@
                                         <form ng-cloak>
                                           <md-toolbar>
                                             <div class="md-toolbar-tools">
-                                              <h2>Mango (Fruit)</h2>
+                                              <h2>PARCIT-PLATEFORME</h2>
                                               <span flex></span>
                                               <md-button class="md-icon-button" ng-click="cancel()">
-                                               Cancel
+                                               X
                                               </md-button>
                                             </div>
                                           </md-toolbar>
                                       
                                           <md-dialog-content>
                                             <div class="md-dialog-content">
-                                              <h2>ID Projet est {{currentprojet.id}}</h2>
+                                              <h2>{{currentprojet.name}}</h2>
                                               
                                             <p>
                                                 {{currentprojet.description}}
@@ -122,15 +121,15 @@
                                           </md-dialog-content>
                                       
                                           <md-dialog-actions layout="row">
-                                            <md-button href="#!/evaluation/{{currentprojet.id}}" target="_blank" md-autofocus>
+                                            <md-button href="#!/evaluation/{{currentprojet._id}}" target="_blank" md-autofocus>
                                               evaluer le projet
                                             </md-button>
                                             <span flex></span>
                                             <md-button ng-click="answer('not useful')">
-                                             Not Useful
+                                             ok
                                             </md-button>
                                             <md-button ng-click="answer('useful')" class="md-primary">
-                                              Useful
+                                              cancel
                                             </md-button>
                                           </md-dialog-actions>
                                         </form>
