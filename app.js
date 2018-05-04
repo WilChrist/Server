@@ -309,7 +309,20 @@ app.get('/api/evaluations/:_id', (req, res) => {
 		if(err){
 			throw err;
 		}
-		res.json(evaluations);
+		////////////
+		var tab=[];
+		evaluations.forEach(element => {
+			tab.push(element.global_evaluation);
+		});
+		Project.getProjectById(req.params._id, (er, proj)=>{
+			if(err){
+				throw err;
+			}
+			
+			res.json({projectevaluations:{tab:tab,projet:proj}});
+		});
+		///////////
+		
 	});
 });
 
