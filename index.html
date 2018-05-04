@@ -174,11 +174,10 @@
                         $http.post("/api/projectslist") /*j'ai retirer le type*/
                             .then (function success(data, status, headers, config) {
                                 if(data.data.list != null){
-                                    alert("données recu");
                                     $scope.data = data.data.list;
                                 }
                                 else{
-                                    alert("Euh il n'y a pas de données");
+                                    alert("Euh il n'y a pas de projets enregistrés");
                                 }
                             },function eroor(data, status, headers, config) {
                             alert( "failure message: " + JSON.stringify({data: data}));
@@ -247,7 +246,6 @@
                     $http.post("/api/login",{email:emaillogin,password:pswlogin}) /*j'ai retirer le type*/
                     .then (function success(data, status, headers, config) {
                         if(data.data.user != null){
-                            alert("Bienvenue");
                             $rootScope.user=data.data.user;
                             window.location="#!listeprojets"; 
                         }
@@ -265,7 +263,7 @@
                    
                     $http.post("/api/serviceProviders",{username:uname,email:emailsignup,password:pswsignup,gender:sexe})
                     .then(function success(data){
-                        alert("reussi");
+                        alert("Vous avez bien été inscrit");
                         window.location="#!/";
                     },function eroor(data, status, headers, config) {
                     alert( "failure message: " + JSON.stringify({data: data}));
@@ -330,15 +328,16 @@
                     $scope.error="";
                 }
             });
-            app.controller("Ctrlevaluation",function($scope,session,$http,$routeParams){
+            app.controller("Ctrlevaluation",function($scope,session,$http,$routeParams,$rootScope){
                 $scope.gantttoevaluate={};
                 $scope.tasks=[];
+                $scope.idprojet = $routeParams.id;
                // alert($routeParams.id);
                 $scope.getprojcet=function(){
                     session.islogged();
                     $http.get("/api/diagrams/"+$routeParams.id)
                     .then (function success(data, status, headers, config) {
-                        console.log(data.data);
+                        //console.log(data.data);
                         $scope.gantttoevaluate = data.data.gantt;
                         $scope.tasks = $scope.gantttoevaluate.objet.tasks.slice(1,$scope.gantttoevaluate.objet.tasks.length); 
                     },function eroor(data, status, headers, config) {
@@ -347,15 +346,23 @@
                 }
                 
                 $scope.save_evaluation=function(){
-                    var projetevaluation = $scope.projet;
+                    var projetevaluation = {};
+                    projetevaluation.id_project = $scope.idprojet;
+                    projetevaluation.id_diagram = $scope.gantttoevaluate._id;
+                    projetevaluation.id_user = $rootScope.user._id;
+                    
                     var sum=0;
-                    for(var i=1;i<projetevaluation.gantt.tasks.length;i++){
-                        var id="#"+projetevaluation.gantt.tasks[i].id;
-                        projetevaluation.gantt.tasks[i].progress= parseInt( $(id).val());
+                    for(var i=1;i<$scope.gantttoevaluate.objet.tasks.length;i++){
+                        var id="#"+$scope.gantttoevaluate.objet.tasks[i].id;
+                        $scope.gantttoevaluate.objet.tasks[i].progress= parseInt( $(id).val());
                         sum+=parseInt($(id).val());
                     }
-                    projetevaluation.gantt.tasks[0].progress = sum/(projetevaluation.gantt.tasks.length-1);
-                    console.log(projetevaluation.gantt.tasks);
+
+                    $scope.gantttoevaluate.objet.tasks[0].progress = sum/($scope.gantttoevaluate.objet.tasks.length-1);
+                    projetevaluation.objet = $scope.gantttoevaluate.objet;
+                    projetevaluation.gobal_evaluation = $scope.gantttoevaluate.objet.tasks[0].progress;
+
+                    console.log(projetevaluation);
                 }
 
             });
@@ -386,14 +393,14 @@
                     .then (function success(data, status, headers, config) {
                        
                         if(data.data.ganttsaved){
-                            alert("gatt sauvegarder"); 
+                            //alert("gatt sauvegarder"); 
                             projettosave.id_diagram = data.data.ganttsaved._id;
                             ////////////////////////////////////////////////////////////////////////////////////////
                                     $http.post("/api/projects",{projet:projettosave})
                                         .then (function success(data, status, headers, config) {
                                         
                                             if(data.data.success){
-                                                alert("project sauvegarder");     
+                                                //alert("project sauvegarder");     
                                             }
                                             else{
                                                 alert("une erreur est survenue lors de la sauvegarde du projet");
