@@ -8,7 +8,7 @@ var session = require('express-session');
 
 Project =require('./models/project');
 Diagram =require('./models/diagram');
-
+Evaluation =require('./models/evaluation');
 ServiceProviders =require('./models/serviceProvider');
 
 mongoose.connect(config.database);
@@ -302,5 +302,28 @@ app.delete('/api/serviceProviders/:_id', (req, res) => {
 });
 
 /***************************************************************************************************************************************** */
+
+//Get Evaluations
+app.get('/api/evaluations/:_id', (req, res) => {
+	Evaluation.getEvaluationsById(req.params._id,(err, evaluations) => {
+		if(err){
+			throw err;
+		}
+		res.json(evaluations);
+	});
+});
+
+
+//Post Evaluation
+app.post('/api/evaluations', (req, res) => {
+	var evaluation =req.body.evaluation;
+	console.log(req.body.evaluation);
+    Evaluation.addEvaluation(evaluation,function(err, evaluation) {
+		if(err){
+			throw err;
+		}
+		res.json({evaluationsaved:evaluation});
+	});
+});
 app.listen(3000);
 console.log('Running on port 3000...');
