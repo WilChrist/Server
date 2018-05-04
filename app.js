@@ -67,6 +67,9 @@ app.get('/liste_projets.html', function (req, res) {
 app.get('/erreur.html', function (req, res) {
     res.sendFile(path.join(__dirname+ '/erreur.html'));
 });
+app.get('/projectrecap.html', function (req, res) {
+    res.sendFile(path.join(__dirname+ '/projectrecap.html'));
+});
 // Get Projects
 app.post('/api/projectslist', (req, res) => {
 	Project.getProjects((err, projects) => {
@@ -304,7 +307,7 @@ app.delete('/api/serviceProviders/:_id', (req, res) => {
 /***************************************************************************************************************************************** */
 
 //Get Evaluations
-app.get('/api/evaluations/:_id', (req, res) => {
+app.post('/api/evaluationsp/:_id', (req, res) => {
 	Evaluation.getEvaluationsById(req.params._id,(err, evaluations) => {
 		if(err){
 			throw err;

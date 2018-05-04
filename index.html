@@ -99,6 +99,9 @@
   <link rel=stylesheet href="gantt/gantt.css" type="text/css">
   <link rel=stylesheet href="gantt/ganttPrint.css" type="text/css" media="print">
 <!-- fin des liens pour le gantt-->
+
+<!-- lien pour le chart -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -132,6 +135,7 @@
     </script>
     
     <script>
+        var k={};
         //module principale de l'application
         var app = angular.module('myApp', ['ngRoute','ngMaterial','ngMessages']);
         app.service('shared',function(){
@@ -360,12 +364,20 @@
 
                     $scope.gantttoevaluate.objet.tasks[0].progress = sum/($scope.gantttoevaluate.objet.tasks.length-1);
                     projetevaluation.objet = $scope.gantttoevaluate.objet;
-                    projetevaluation.gobal_evaluation = $scope.gantttoevaluate.objet.tasks[0].progress;
+                    projetevaluation.global_evaluation = $scope.gantttoevaluate.objet.tasks[0].progress;
+                    ///////////////////////////////////////envoie au serveur
 
-                    console.log(projetevaluation);
+                    $http.post("/api/evaluations/",{evaluation:projetevaluation}) /*j'ai retirer le type*/
+                            .then (function success(data, status, headers, config) {
+                                alert("evaluation done");
+                                window.location="#!listeprojets";
+                            },function eroor(data, status, headers, config) {
+                            alert( "failure message: " + JSON.stringify({data: data}));
+                        });
                 }
 
             });
+
             /*controller du dashboard*/
             app.controller("dashCtrl",function($scope,session){
                 $scope.check=function(){
@@ -516,6 +528,47 @@
                     x[n].className += " active";
                 }
             })
+            
+            /*controller de la page de recapitulatif*/
+            app.controller("recapCtrl",function($scope,session,$rootScope,$routeParams,$http,$q,$timeout){
+                //var evaluation =null;
+                $rootScope.categorie = [0,0,0,0];
+                
+                $scope.check=function(){
+
+                session.islogged(); 
+/************************************************************************************************/                    
+                let promise= $http.post("/api/evaluationsp/"+$routeParams.id);
+
+                $q.all([promise]).then(data=>{
+                    $rootScope.evaluationp=data[0].data.projectevaluations;
+                    //console.log($rootScope.evaluationp);
+                    //this.trier();
+                    $timeout(this.trier(),2000);
+                })
+
+                    //console.log($scope.evaluationp);
+                    
+                    
+                    bindchart($rootScope.categorie);
+                    
+                }
+
+                $scope.getdata=function(evaluationpc){
+                    
+                }
+
+                $scope.trier = function(){
+                    console.log($rootScope.evaluationp);
+                    for(var i=0;i<$rootScope.evaluationp.tab.length;i++){
+                        if($rootScope.evaluationp.tab[i]<26) $rootScope.categorie[0]++;
+                        if($rootScope.evaluationp.tab[i]>26 && $rootScope.evaluationp.tab[i]<51) $rootScope.categorie[1]++;
+                        if($rootScope.evaluationp.tab[i]>51 && $rootScope.evaluationp.tab[i]>76) $rootScope.categorie[2]++;
+                        if($rootScope.evaluationp.tab[i]<76 && $rootScope.evaluationp.tab[i]<=100) $rootScope.categorie[3]++;
+                    }
+                }
+              
+            });
 
             app.config(function($routeProvider) {
                 $routeProvider
@@ -535,11 +588,18 @@
                 .when("/listeprojets", {
                     templateUrl :"liste_projets.html"
                 })
+                .when("/recapitulatifprojet/:id",{
+                    templateUrl:'projectrecap.html',
+                    controller:'recapCtrl'
+                })
                 .when("/erreur",{
                     templateUrl:"erreur.html"
                 })
                 .otherwise({redirectTo : '/erreur' });
             });
+            function trions(tab){
+                console.log(tab);
+            }
             </script>
     <title>Welcome</title>
 </head>

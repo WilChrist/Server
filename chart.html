@@ -10,6 +10,8 @@
 <body>
     <canvas id="myChart" width="5" height="5"></canvas>
 <script>
+
+var bindchart = function(categorie){
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
