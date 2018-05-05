@@ -12,10 +12,12 @@ var util = require('util');
         id:{type: String, required : false},
         author:{type: String, required : true},
         name:{type: String,required: true},
-        type:{type: String, required: true},
+        description:{type: String, required: true},
         state:{type: String, required: false, Default:"unvalidate"},
         location:{type: String, required: true},
-        registering_date:{type: Date,Default: Date.now()}, 
+        registering_date:{type: Date,Default: Date.now()},
+        begin_date:{type: Date,Default: Date.now()},
+        end_date:{type: Date,Default: Date.now()}, 
         id_diagram:{type: String, required: false} 
     });
 };

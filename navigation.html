@@ -1,0 +1,69 @@
+<div class="sidebar" data-color="azure" data-image="static/assets/img/sidebar-4.jpg">
+    <!-- Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+      Tip 2: you can also add an image using data-image tag -->
+
+      <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="" class="simple-text">
+                    <img src="images/parcit-logo.png" class="img-rounded" alt="PARCIT" width="100" height="80">
+                </a>
+            </div>
+            <ul class="nav">
+                    <li id="listeprojets">
+                        <a href="#!listeprojets">
+                            <i class="pe-7s-news-paper"></i>
+                            <p>Liste Des Projets</p>
+                        </a>
+                    </li>
+                <li id="dashboard">
+                    <a href="#!dashboard">
+                        <i class="pe-7s-graph"></i>
+                        <p>Ajouter un Projet</p>
+                    </a>
+                </li>
+                <li id="profil">
+                    <a href="#!profil">
+                        <i class="pe-7s-user"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li id="evaluation">
+                    <a href="#!evaluation/5aebccbf7fd965004c87f461">
+                        <i class="pe-7s-note2"></i>
+                        <p>Evaluation</p>
+                    </a>
+                </li>
+                <li id="recapitulatifprojet">
+                    <a href="#!recapitulatifprojet/5aebccbf7fd965004c87f461">
+                        <i class="pe-7s-news-paper"></i>
+                        <p>Recapitulatif Projet</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="pe-7s-science"></i>
+                        <p>Deconnexion</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="pe-7s-map-marker"></i>
+                        <p>Maps</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="pe-7s-bell"></i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
+                <li ng-controller="CtrlDeconnection" class="active-pro" ng-click="deconnect()">
+                    <a href="#!deconnexion">
+                        <i class="pe-7s-power"></i>
+                        <p>LOGOUT</p>
+                    </a>
+                </li>
+
+            </ul>
+      </div>
+  </div>
