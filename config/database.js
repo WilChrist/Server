@@ -1,4 +1,4 @@
 module.exports = {
-  database:'mongodb://localhost:27017/pacit',
+  database:'mongodb://pacit:Facebook1@ds062818.mlab.com:62818/pacit',
   secret: 'yoursecret'
 }
