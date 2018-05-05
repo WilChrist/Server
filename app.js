@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/database');
 
-
+var session = require('express-session');
 
 Project =require('./models/project');
 Diagram =require('./models/diagram');
@@ -28,6 +28,15 @@ db.on('error', function(err){
 // Init App
 const app = express();
 app.use(bodyParser.json());
+
+var cors=require('cors');
+app.use(cors());
+
+app.use( session({secret : 's3Cur3',resave: false,saveUninitialized: true, cookie: {
+	path: "/",
+	httpOnly: true,
+	cookieName: 'session'
+}}));
 
 app.get('/', (req, res) => {
 	res.send('Please use /api/books or /api/genres');
@@ -173,10 +182,44 @@ app.get('/api/serviceProviders/:_id', (req, res) => {
 	});
 });
 
+//Post login
+app.post('/api/login', (req, res) => {
+	var mail=req.body.email;
+	var pass=req.body.password;
+	ServiceProviders.getServiceProviderByEmail(mail, function(err, serviceProvider) {
+		if(err){
+			throw err;
+		}
+		//console.log(serviceProvider);
+		if(serviceProvider.password==pass){
+			req.session.user=serviceProvider;
+			req.session.save(function(err){});
+			console.log(req);
+			res.json({user:serviceProvider});
+			
+		}else{
+			res.json({error:"bad password"});
+		}
+		
+	});
+});
+
+app.post('/api/issession',function(req,res){
+	req.session.reload(function(err){});
+	console.log("here");
+	console.log(req.session.user);
+if(req.session.user){
+res.send({session:true,user:req.session.user});
+}
+else{
+res.send({session:false});
+}
+});
+
+
 //Post ServiceProviders
 app.post('/api/serviceProviders', (req, res) => {
 	var serviceProvider =req.body;
-	console.log(Date.now());
     ServiceProviders.addServiceProvider(serviceProvider,function(err, serviceProvider) {
 		if(err){
 			throw err;

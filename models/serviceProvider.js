@@ -20,9 +20,10 @@ module.exports.getServiceProviders = (callback, limit) => {
 module.exports.getServiceProviderById = (id,callback) => {
 	ServiceProvider.findById(id,callback);
 }
-// Get ServiceProvider by email and password
-module.exports.getServiceProviderByEmailAndPassword = (email,password,callback) => {
-	ServiceProvider.findOne(email,password,callback);
+// Get ServiceProvider by email
+module.exports.getServiceProviderByEmail = (email,callback) => {
+    var query={email:email}
+	ServiceProvider.findOne(query,callback);
 }
 // Add ServiceProvider
 module.exports.addServiceProvider=function (serviceProvider,callback){
