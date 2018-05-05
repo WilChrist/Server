@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const config = require('./config/database');
 var fs = require('fs');
 var session = require('express-session');
+const PORT = process.env.PORT || 5000;
 
 Project =require('./models/project');
 Diagram =require('./models/diagram');
@@ -343,5 +344,4 @@ app.post('/api/evaluations', (req, res) => {
 		res.json({evaluationsaved:evaluation});
 	});
 });
-app.listen(3000);
-console.log('Running on port 3000...');
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`);
