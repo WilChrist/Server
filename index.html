@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp" >
+<html lang="fr" ng-app="myApp" >
 <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link  href="https://github.com/angular-ui/bootstrap/blob/master/src/pagination/pagination.js">
@@ -105,6 +105,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
     <script>
             // Get the modal
                /* $('#id01').on('click', function(e) {
@@ -277,9 +278,9 @@
                 this.test = function(){
                     $http.get("/api/serviceProviders")
                     .then(function success(data){
-                        console.log(data);
+                        //console.log(data);
                     },function error(data,status){
-                        console.log(data);
+                        //console.log(data);
                     })
                 }
                 //vérifie si l'utilisateur est bien co snnecté
@@ -544,13 +545,14 @@
                     $rootScope.evaluationp=data[0].data.projectevaluations;
                     //console.log($rootScope.evaluationp);
                     //this.trier();
-                    $timeout(this.trier(),2000);
+                    $timeout(this.trier(),0);
+                    bindchart($rootScope.categorie);
                 })
 
                     //console.log($scope.evaluationp);
                     
                     
-                    bindchart($rootScope.categorie);
+                    
                 }
 
                 $scope.getdata=function(evaluationpc){
@@ -558,12 +560,20 @@
                 }
 
                 $scope.trier = function(){
-                    console.log($rootScope.evaluationp);
+                   // console.log($rootScope.evaluationp);
                     for(var i=0;i<$rootScope.evaluationp.tab.length;i++){
-                        if($rootScope.evaluationp.tab[i]<26) $rootScope.categorie[0]++;
-                        if($rootScope.evaluationp.tab[i]>26 && $rootScope.evaluationp.tab[i]<51) $rootScope.categorie[1]++;
-                        if($rootScope.evaluationp.tab[i]>51 && $rootScope.evaluationp.tab[i]<76) $rootScope.categorie[2]++;
-                        if($rootScope.evaluationp.tab[i]>76 && $rootScope.evaluationp.tab[i]<=100) $rootScope.categorie[3]++;
+                        if($rootScope.evaluationp.tab[i]<26){
+                           $rootScope.categorie[0]++; 
+                        } else
+                        if($rootScope.evaluationp.tab[i]>=26 && $rootScope.evaluationp.tab[i]<51){
+                          $rootScope.categorie[1]++;  
+                        } else
+                        if($rootScope.evaluationp.tab[i]>=51 && $rootScope.evaluationp.tab[i]<76){
+                            $rootScope.categorie[2]++;
+                        } else
+                        if($rootScope.evaluationp.tab[i]>=76 && $rootScope.evaluationp.tab[i]<=100){
+                            $rootScope.categorie[3]++;
+                        } else{}
                     }
                 }
               
@@ -597,7 +607,7 @@
                 .otherwise({redirectTo : '/erreur' });
             });
             function trions(tab){
-                console.log(tab);
+                //console.log(tab);
             }
             </script>
     <title>Welcome</title>

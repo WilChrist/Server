@@ -67,7 +67,7 @@
                                                 <td>{{task.start | date:'dd/MM/yyyy'}}</td>
                                                 <td>{{task.end | date:'dd/MM/yyyy'}}</td>
                                                 <td>
-                                                    <input type="range" id="{{task.id}}" class="slider">
+                                                    <input type="range" id="{{task.id}}" class="slider" oninput="showVal(this.value,this.id)">
                                                     <span  class="slider_label" id="{{task.id}}_disp" text="ok">50%</span>
                                                 </td>
                                             </tr>
@@ -98,21 +98,25 @@
              </div>
        </div>
 <script>
-    $(function(){
+    function showVal(newVal,id){
+        document.getElementById(id+"_disp").innerHTML=newVal+" %";
+    }
+    /*$(function(){
         $('.slider').on('input change', function(){
+            alert(this.value);
             $(this).next($('.slider_label')).html(this.value+"%");
-        });
+        });*/
 
      /* $('.slider_label').each(function(){
           var value = $(this).prev().attr('value');
           $(this).html(value);
         });  */
   
-});
+
 </script>
 <script>
         $(document).ready(function(){
           $('ul.nav li.active').removeClass("active");
           $('ul.nav li#evaluation').addClass("active");
         });
-      </script>
+ </script>

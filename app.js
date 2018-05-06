@@ -144,13 +144,13 @@ app.get('/api/diagrams', (req, res) => {
 
 //Get Diagram by id
 app.get('/api/diagrams/:_id', (req, res) => {
-	console.log(req.params._id);
+	//console.log(req.params._id);
 	Project.getProjectById(req.params._id,function(err, project) {
 		if(err){
 			throw err;
 		}
 		Diagram.getDiagramById(project.id_diagram, function(err, diagram) {
-			console.log(diagram);
+			//console.log(diagram);
 			if(err){
 				throw err;
 			}
@@ -163,7 +163,7 @@ app.get('/api/diagrams/:_id', (req, res) => {
 //Post Diagram
 app.post('/api/diagrams', (req, res) => {
 	var diagram =req.body.gantt;
-	console.log(req.body.gantt);
+	//console.log(req.body.gantt);
     Diagram.addDiagram(diagram,function(err, diagram) {
 		if(err){
 			throw err;
@@ -179,7 +179,7 @@ app.post('/api/getprojet',function(req,res){
 //Put Diagram
 app.put('/api/diagrams/:_id', (req, res) => {
     var id=req.params._id;
-    console.log("+++++++++"+id);
+    //console.log("+++++++++"+id);
     var diagram =req.body;
     Diagram.updateDiagram(id,diagram,{},function(err, diagram) {
 		if(err){
@@ -235,15 +235,20 @@ app.post('/api/login', (req, res) => {
 			throw err;
 		}
 		//console.log(serviceProvider);
-		if(serviceProvider.password==pass){
-			req.session.user=serviceProvider;
-			req.session.save(function(err){});
-			//console.log(req);
-			res.json({user:serviceProvider});
-			
+		if(serviceProvider!=null){
+				if(serviceProvider.password==pass){
+				req.session.user=serviceProvider;
+				req.session.save(function(err){});
+				//console.log(req);
+				res.json({user:serviceProvider});
+				
+			}else{
+				res.json({user:null});
+			}
 		}else{
-			res.json({error:"bad password"});
+			res.json({user:null});
 		}
+		
 		
 	});
 });
@@ -257,8 +262,8 @@ app.post('/api/deconnect',function(req,res){
 
 app.post('/api/issession',function(req,res){
 	req.session.reload(function(err){});
-	console.log("here");
-	console.log(req.session.user);
+	//console.log("here");
+	//console.log(req.session.user);
 if(req.session.user){
 res.send({session:true,user:req.session.user});
 }
@@ -336,7 +341,7 @@ app.post('/api/evaluationsp/:_id', (req, res) => {
 //Post Evaluation
 app.post('/api/evaluations', (req, res) => {
 	var evaluation =req.body.evaluation;
-	console.log(req.body.evaluation);
+	//console.log(req.body.evaluation);
     Evaluation.addEvaluation(evaluation,function(err, evaluation) {
 		if(err){
 			throw err;
